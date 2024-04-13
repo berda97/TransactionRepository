@@ -13,17 +13,31 @@ namespace TransactionRepository.Controllers
     public class TransactionController : ControllerBase
     {
         private readonly ITransactionService _transactionService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IHashService _hashService;
         
-        public TransactionController(ITransactionService transactionService)
-        {  
-            _transactionService = transactionService;
-        }
-        
-        [HttpPost]
-        public IActionResult CreateTransaction([FromBody] TransactionRequestDto request)
+        public TransactionController(ITransactionService transactionService, IHttpContextAccessor httpContextAccessor, IHashService hashService)
         {
-            // Processing the transaction
-            var response = _transactionService.ProcessTransaction(request);
+            _transactionService = transactionService;
+            _httpContextAccessor = httpContextAccessor;
+            _hashService = hashService;
+            
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateTransaction([FromBody] TransactionRequestDto request)
+        {
+
+            string receivedHash = _httpContextAccessor.HttpContext.Request.Headers["hash"];
+            string secretKey = "your_secret_key"; //TODO configuration
+            string requestData = $"{request.ExternalTransactionId}{request.UserId}{request.Amount}{request.Currency}";
+
+            if (!_hashService.IsValidHash(receivedHash, requestData, secretKey))
+            {
+                return BadRequest(new TransactionResponseDto { Message = "Invalid hash", Status = 1 });
+            }
+
+            var response = await _transactionService.ProcessTransactionAsync(request);
 
             if (response.Status == 0)
             {
@@ -34,6 +48,7 @@ namespace TransactionRepository.Controllers
                 return BadRequest(response);
             }
         }
+       
     }
 }
 

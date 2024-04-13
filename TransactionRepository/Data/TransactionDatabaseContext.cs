@@ -10,5 +10,7 @@ namespace TransactionRepository.Data
             optionsBuilder.UseInMemoryDatabase(databaseName: "TransactionDatabase");
         }
         public DbSet<User> Users { get; set; }
+        public DbSet<Account> Accounts { get; set; }
+        public DbSet<Transaction> Tranasctions { get; set; }
     }
 }

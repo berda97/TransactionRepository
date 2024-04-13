@@ -4,6 +4,6 @@ namespace TransactionRepository.Interface
 {
     public interface ITransactionService
     {
-        TransactionResponseDto ProcessTransaction(TransactionRequestDto request);
+        Task<TransactionResponseDto> ProcessTransactionAsync(TransactionRequestDto request);
     }
 }

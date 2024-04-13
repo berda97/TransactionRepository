@@ -1,12 +1,16 @@
+using Microsoft.EntityFrameworkCore;
 using TransactionRepository.Data;
 using TransactionRepository.Interface;
 using TransactionRepository.Service;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<TransactionDatabaseContext>();
 builder.Services.AddScoped<IHashService,HashService>();
 builder.Services.AddScoped<ITransactionService,TransactionService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-builder.Services.AddDbContext<TransactionDatabaseContext>();
+
+
+
 
 // Add services to the container.
 
@@ -21,8 +25,10 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    var dbContext = services.GetRequiredService<TransactionDatabaseContext>();
-    SeedData.InitializeAsync(dbContext).Wait();
+    var context = services.GetRequiredService<TransactionDatabaseContext>();
+    await SeedData.InitializeAsync(context);
+    await AccountSeedData.InitializeAsync(context);
+   
 }
 
 // Configure the HTTP request pipeline.

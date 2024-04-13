@@ -1,10 +1,15 @@
-﻿namespace TransactionRepository.Model
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TransactionRepository.Model
 {
     public class Account
     {
-        public int AccountId { get; set; } 
-        public int UserId { get; set; } 
-        public decimal Balance { get; set; } 
+        [Key]
+        public int AccountId { get; set; }
+        public decimal Balance { get; set; }
+        public string Currency { get; set; }
         public DateTime OpeningDate { get; set; }
+
     }
 }
+

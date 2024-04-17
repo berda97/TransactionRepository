@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using TransactionRepository.Data;
 using TransactionRepository.Interface;
 using TransactionRepository.Service;
@@ -9,18 +10,18 @@ builder.Services.AddScoped<IHashService,HashService>();
 builder.Services.AddScoped<ITransactionService,TransactionService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-
-
-
 // Add services to the container.
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration).CreateLogger();
+builder.Host.UseSerilog();
 
 var app = builder.Build();
+
 // Seed the database
 using (var scope = app.Services.CreateScope())
 {
@@ -30,13 +31,13 @@ using (var scope = app.Services.CreateScope())
     await AccountSeedData.InitializeAsync(context);
    
 }
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 

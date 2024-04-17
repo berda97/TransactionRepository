@@ -10,7 +10,7 @@ Transaction project
 
 2. (Sta uraditi da bi zadatak bio bolji)
  - Unit testovi za servise.
-- Bolji error handling: Dodavanje detaljnije opise gresaka i vise razlicitih statusnih kodova kako bi korisnici lakse razumeli problem i kako bi se razlikovale razlicite vrste gresaka koriscenjem (try,catch).
+- Bolji error handling (global error handling): Dodavanje detaljnije opise gresaka i vise razlicitih statusnih kodova kako bi korisnici lakse razumeli problem i kako bi se razlikovale razlicite vrste gresaka koriscenjem (try,catch).
 - Da se ispostuje Celan Arhitektura: da se podele projekti na slojeve(Presentation sloj,Application sloj,Infrastructure sloj) u samom projektu sam gledao da ispostujem Clean Arhitekturu po folderim.
 - Iskoristiti MySql bazu ili neku drugu relacionu bazu.
 - Loggovanje i provara hash bi trebalo da se nadje u  Middleware, kako bi lakse moglo da se iskoristi za buduce endpointe.

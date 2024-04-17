@@ -41,8 +41,11 @@ namespace TransactionRepository.Controllers
 
             if (!_hashService.IsValidHash(receivedHash, requestData, secretKey))
             {
-                _logger.LogWarning("Invalid hash received for request: {@RequestData}", requestData);
-                return BadRequest(new TransactionResponseDto { Message = "Invalid hash", Status = 1 });
+                _logger.LogError("Invalid hash received for request: {@RequestData}", requestData);
+                var res = new TransactionResponseDto { Message = "Invalid hash", Status = 1 };
+                _logger.LogInformation("Returned response: {@Response}", res);
+
+                return BadRequest(res);
             }
             var response = await _transactionService.ProcessTransactionAsync(request);
             _logger.LogInformation("Returned response: {@Response}", response);
